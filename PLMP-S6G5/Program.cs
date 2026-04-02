@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using PLMP_S6G5.Models;
+
 namespace PLMP_S6G5
 {
     public class Program
@@ -7,8 +10,10 @@ namespace PLMP_S6G5
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
+            // Add services to the container.
+            builder.Services.AddDbContext<PLMPS6G5>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
