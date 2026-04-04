@@ -418,5 +418,5 @@ FodyWeavers.xsd
 *.msp
 
 *.cache
-PLMP-S6G5/obj/
-PLMP-MVC/obj/
+PLMP-S6G5/obj/*
+PLMP-MVC/obj/*
