@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37111.16 d17.14
+VisualStudioVersion = 17.14.37111.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLMP-S6G5", "PLMP-S6G5.csproj", "{03477D9D-3969-443E-B71B-18CBDE3AE160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLMP-MVC", "..\PLMP-MVC\PLMP-MVC.csproj", "{8D2D0FEC-A1CB-41B3-A62D-484157724656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{03477D9D-3969-443E-B71B-18CBDE3AE160}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03477D9D-3969-443E-B71B-18CBDE3AE160}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03477D9D-3969-443E-B71B-18CBDE3AE160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2D0FEC-A1CB-41B3-A62D-484157724656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2D0FEC-A1CB-41B3-A62D-484157724656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2D0FEC-A1CB-41B3-A62D-484157724656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2D0FEC-A1CB-41B3-A62D-484157724656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
