@@ -1,0 +1,68 @@
+﻿@model PLMP_S6G5.Models.Unit
+
+@{
+    ViewData["Title"] = "Unit Details";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container-box {
+        background-color: white;
+        padding: 30px;
+        margin-top: 50px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 700px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .details-row {
+        margin-bottom: 15px;
+        padding: 12px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .details-label {
+        font-weight: 700;
+        color: #444;
+    }
+
+    .btn-custom {
+        background-color: #667eea;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        margin-right: 8px;
+    }
+
+        .btn-custom:hover {
+            background-color: #5563c1;
+            color: white;
+        }
+</style>
+
+<div class="container container-box">
+    <h1>📄 Unit Details</h1>
+
+    <div class="details-row"><span class="details-label">Unit ID:</span> @Model.UnitId</div>
+    <div class="details-row"><span class="details-label">Building ID:</span> @Model.BuildingId</div>
+    <div class="details-row"><span class="details-label">Type:</span> @Model.Type</div>
+    <div class="details-row"><span class="details-label">Size:</span> @Model.Size</div>
+    <div class="details-row"><span class="details-label">Rent Amount:</span> @Model.RentAmount</div>
+    <div class="details-row"><span class="details-label">Availability Status:</span> @Model.AvailabilityStatus</div>
+
+    <a asp-action="Edit" asp-route-id="@Model.UnitId" class="btn-custom">Edit</a>
+    <a asp-action="Index" class="btn-custom">Back to List</a>
+</div>

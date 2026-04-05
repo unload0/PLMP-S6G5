@@ -4,44 +4,127 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PLMP_MVC</title>
-    <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PLMP_MVC.styles.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .custom-navbar {
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 0 0 18px 18px;
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 24px;
+            color: #5a3ec8 !important;
+        }
+
+        .nav-link {
+            color: #333 !important;
+            font-weight: 600;
+            margin-right: 10px;
+            border-radius: 8px;
+            padding: 8px 14px !important;
+            transition: 0.3s ease;
+        }
+
+            .nav-link:hover {
+                background-color: #667eea;
+                color: white !important;
+            }
+
+        .main-container {
+            background: white;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            min-height: 70vh;
+        }
+
+        .footer-custom {
+            background: rgba(255,255,255,0.95);
+            color: #555;
+            text-align: center;
+            padding: 15px;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+        }
+
+            .footer-custom a {
+                color: #5a3ec8;
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+                .footer-custom a:hover {
+                    text-decoration: underline;
+                }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg custom-navbar">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PLMP_MVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🏢 PLMP</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Buildings" asp-action="Index">Buildings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Units" asp-action="Index">Units</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MaintenanceRequests" asp-action="Index">Maintenance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="main-container">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer-custom">
         <div class="container">
-            &copy; 2026 - PLMP_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - PLMP_MVC |
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

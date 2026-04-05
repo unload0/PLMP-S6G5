@@ -1,0 +1,114 @@
+﻿@model PLMP_S6G5.Models.Unit
+
+@{
+    ViewData["Title"] = "Edit Unit";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container-box {
+        background-color: white;
+        padding: 30px;
+        margin-top: 50px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 700px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .btn-custom {
+        background-color: #667eea;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        margin-right: 8px;
+    }
+
+        .btn-custom:hover {
+            background-color: #5563c1;
+            color: white;
+        }
+
+    .text-danger {
+        color: #e74c3c;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container container-box">
+    <h1>✏️ Edit Unit</h1>
+
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="UnitId" />
+
+        <div class="form-group">
+            <label asp-for="BuildingId"></label>
+            <input asp-for="BuildingId" class="form-control" />
+            <span asp-validation-for="BuildingId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Type"></label>
+            <input asp-for="Type" class="form-control" />
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Size"></label>
+            <input asp-for="Size" class="form-control" />
+            <span asp-validation-for="Size" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="RentAmount"></label>
+            <input asp-for="RentAmount" class="form-control" />
+            <span asp-validation-for="RentAmount" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AvailabilityStatus"></label>
+            <input asp-for="AvailabilityStatus" class="form-control" />
+            <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-custom">Update</button>
+        <a asp-action="Index" class="btn-custom">Back to List</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
