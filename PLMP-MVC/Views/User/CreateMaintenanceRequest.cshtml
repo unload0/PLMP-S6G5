@@ -1,0 +1,95 @@
+﻿@model PLMP_S6G5.Models.MaintenanceRequest
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Create Maintenance Request";
+    var categoryOptions = ViewBag.CategoryOptions as List<SelectListItem>;
+    var priorityOptions = ViewBag.PriorityOptions as List<SelectListItem>;
+}
+
+<style>
+    .form-card {
+        max-width: 760px;
+        margin: auto;
+        background: white;
+        padding: 32px;
+        border-radius: 22px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .form-title {
+        color: #be185d;
+        font-weight: 800;
+        margin-bottom: 24px;
+        font-size: 34px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #374151;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+    }
+
+    .btn-submit {
+        background: #db2777;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .validation-text {
+        color: #dc2626;
+        font-size: 14px;
+        margin-top: 6px;
+    }
+</style>
+
+<div class="form-card">
+    <h2 class="form-title">Create Maintenance Request</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <form asp-action="CreateMaintenanceRequest" method="post">
+
+        <div class="mb-3">
+            <label asp-for="CategoryType" class="form-label">Category Type</label>
+            <select asp-for="CategoryType" asp-items="categoryOptions" class="form-control">
+                <option value="">-- Select Category --</option>
+            </select>
+            <span asp-validation-for="CategoryType" class="validation-text"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Priority" class="form-label">Priority</label>
+            <select asp-for="Priority" asp-items="priorityOptions" class="form-control">
+                <option value="">-- Select Priority --</option>
+            </select>
+            <span asp-validation-for="Priority" class="validation-text"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe the issue clearly..."></textarea>
+            <span asp-validation-for="Description" class="validation-text"></span>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Request</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

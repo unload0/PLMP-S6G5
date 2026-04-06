@@ -15,110 +15,45 @@ namespace PLMP_MVC.Controllers
             _context = context;
         }
 
-        // GET: MaintenanceRequests
         public async Task<IActionResult> Index()
         {
-            return View(await _context.MaintenanceRequests.ToListAsync());
+            var requests = await _context.MaintenanceRequests
+                .Include(r => r.Tenant)
+                .Include(r => r.Staff)
+                .ToListAsync();
+
+            var staffList = await _context.MaintenanceStaffs
+                .Where(s => s.Available == true)
+                .ToListAsync();
+
+            ViewBag.StaffList = staffList;
+
+            return View(requests);
         }
 
-        // GET: MaintenanceRequests/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var maintenanceRequest = await _context.MaintenanceRequests
-                .FirstOrDefaultAsync(m => m.RequestId == id);
-
-            if (maintenanceRequest == null) return NotFound();
-
-            return View(maintenanceRequest);
-        }
-
-        // GET: MaintenanceRequests/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MaintenanceRequests/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MaintenanceRequest maintenanceRequest)
+        public async Task<IActionResult> AssignTechnician(int requestId, int staffId)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(maintenanceRequest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(maintenanceRequest);
-        }
+            var request = await _context.MaintenanceRequests
+                .FirstOrDefaultAsync(r => r.RequestId == requestId);
 
-        // GET: MaintenanceRequests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
+            if (request == null)
+                return NotFound();
 
-            var maintenanceRequest = await _context.MaintenanceRequests.FindAsync(id);
-            if (maintenanceRequest == null) return NotFound();
+            var staff = await _context.MaintenanceStaffs
+                .FirstOrDefaultAsync(s => s.StaffId == staffId);
 
-            return View(maintenanceRequest);
-        }
+            if (staff == null)
+                return NotFound();
 
-        // POST: MaintenanceRequests/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, MaintenanceRequest maintenanceRequest)
-        {
-            if (id != maintenanceRequest.RequestId) return NotFound();
+            request.StaffId = staffId;
+            request.Status = "Assigned";
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(maintenanceRequest);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.MaintenanceRequests.Any(e => e.RequestId == maintenanceRequest.RequestId))
-                        return NotFound();
-                    else
-                        throw;
-                }
+            _context.MaintenanceRequests.Update(request);
+            await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(maintenanceRequest);
-        }
-
-        // GET: MaintenanceRequests/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var maintenanceRequest = await _context.MaintenanceRequests
-                .FirstOrDefaultAsync(m => m.RequestId == id);
-
-            if (maintenanceRequest == null) return NotFound();
-
-            return View(maintenanceRequest);
-        }
-
-        // POST: MaintenanceRequests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var maintenanceRequest = await _context.MaintenanceRequests.FindAsync(id);
-            if (maintenanceRequest != null)
-            {
-                _context.MaintenanceRequests.Remove(maintenanceRequest);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Technician assigned successfully.";
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PLMP_S6G5.Models;
 
@@ -14,6 +15,15 @@ namespace PLMP_MVC
             builder.Services.AddDbContext<PLMPS6G5>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/Login";
+                    options.AccessDeniedPath = "/Auth/Login";
+                });
+
+            builder.Services.AddAuthorization();
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
@@ -26,11 +36,12 @@ namespace PLMP_MVC
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             app.Run();
         }

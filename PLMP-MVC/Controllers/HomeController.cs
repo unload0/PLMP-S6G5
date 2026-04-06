@@ -1,12 +1,90 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PLMP_S6G5.Models;
 
 namespace PLMP_MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly PLMPS6G5 _context;
+
+        public HomeController(PLMPS6G5 context)
         {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.Buildings = await _context.Buildings.CountAsync();
+            ViewBag.Units = await _context.Units.CountAsync();
+            ViewBag.Payments = await _context.Payments.CountAsync();
+            ViewBag.Requests = await _context.MaintenanceRequests.CountAsync();
+
+            var leaseApplications = await _context.Leases
+                .OrderByDescending(l => l.LeaseId)
+                .ToListAsync();
+
+            ViewBag.LeaseApplications = leaseApplications;
+
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveLease(int id)
+        {
+            var lease = await _context.Leases
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
+
+            if (lease == null)
+                return NotFound();
+
+            var unit = await _context.Units
+                .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
+
+            if (unit == null)
+                return NotFound();
+
+            lease.ApplicationStatus = "Approved";
+            lease.LeaseStatus = "Active";
+            unit.AvailabilityStatus = "Leased";
+
+            _context.Leases.Update(lease);
+            _context.Units.Update(unit);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Lease application approved successfully.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectLease(int id)
+        {
+            var lease = await _context.Leases
+                .FirstOrDefaultAsync(l => l.LeaseId == id);
+
+            if (lease == null)
+                return NotFound();
+
+            var unit = await _context.Units
+                .FirstOrDefaultAsync(u => u.UnitId == lease.UnitId);
+
+            if (unit == null)
+                return NotFound();
+
+            lease.ApplicationStatus = "Rejected";
+            lease.LeaseStatus = "Rejected";
+            unit.AvailabilityStatus = "Vacant";
+
+            _context.Leases.Update(lease);
+            _context.Units.Update(unit);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Lease application rejected.";
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

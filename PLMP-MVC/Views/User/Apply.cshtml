@@ -1,0 +1,55 @@
+﻿@model PLMP_S6G5.Models.Unit
+
+@{
+    ViewData["Title"] = "Apply for Unit";
+}
+
+<style>
+    .form-card {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .form-title {
+        color: #1d4ed8;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    .btn-confirm {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="form-card">
+    <h2 class="form-title">Apply for Unit</h2>
+
+    <div class="info-box">
+        <p><strong>Unit ID:</strong> @Model.UnitId</p>
+        <p><strong>Building ID:</strong> @Model.BuildingId</p>
+        <p><strong>Type:</strong> @Model.Type</p>
+        <p><strong>Rent Amount:</strong> @Model.RentAmount</p>
+        <p><strong>Status:</strong> @Model.AvailabilityStatus</p>
+    </div>
+
+    <form asp-controller="User" asp-action="ApplyConfirmed" method="post">
+        <input type="hidden" name="id" value="@Model.UnitId" />
+        <button type="submit" class="btn-confirm">Confirm Application</button>
+    </form>
+</div>

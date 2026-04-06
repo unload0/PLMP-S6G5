@@ -17,7 +17,7 @@ public partial class MaintenanceRequest
     public int TenantId { get; set; }
 
     [Column("StaffID")]
-    public int StaffId { get; set; }
+    public int? StaffId { get; set; }
 
     [StringLength(300)]
     public string? CategoryType { get; set; }
@@ -32,7 +32,7 @@ public partial class MaintenanceRequest
 
     [ForeignKey("StaffId")]
     [InverseProperty("MaintenanceRequests")]
-    public virtual MaintenanceStaff Staff { get; set; } = null!;
+    public virtual MaintenanceStaff? Staff { get; set; }
 
     [ForeignKey("TenantId")]
     [InverseProperty("MaintenanceRequests")]
