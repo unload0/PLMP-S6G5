@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PLMP_S6G5.Models;
+using System.Security.Claims;
 
 namespace PLMP_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class MaintenanceRequestsController : Controller
     {
         private readonly PLMPS6G5 _context;
@@ -15,6 +17,8 @@ namespace PLMP_MVC.Controllers
             _context = context;
         }
 
+        // Admin only: view all maintenance requests
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var requests = await _context.MaintenanceRequests
@@ -31,6 +35,8 @@ namespace PLMP_MVC.Controllers
             return View(requests);
         }
 
+        // Admin only: assign technician
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AssignTechnician(int requestId, int staffId)
         {
@@ -54,6 +60,62 @@ namespace PLMP_MVC.Controllers
 
             TempData["Success"] = "Technician assigned successfully.";
             return RedirectToAction("Index");
+        }
+
+        // User/Admin: open create request page
+        [HttpGet]
+        public IActionResult Create()
+        {
+            LoadDropdowns();
+            return View("~/Views/User/CreateMaintenanceRequest.cshtml");
+        }
+
+        // User/Admin: submit maintenance request
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(MaintenanceRequest request)
+        {
+            request.Status = "Pending";
+
+            var tenantIdClaim = User.FindFirst("TenantId")?.Value
+                                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(tenantIdClaim, out int tenantId))
+            {
+                request.TenantId = tenantId;
+            }
+
+            if (!ModelState.IsValid)
+            {
+                LoadDropdowns();
+                TempData["Error"] = "Please fill in all required fields correctly.";
+                return View("~/Views/User/CreateMaintenanceRequest.cshtml", request);
+            }
+
+            _context.MaintenanceRequests.Add(request);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Your maintenance request has been submitted successfully.";
+            return RedirectToAction("Create");
+        }
+        
+
+        private void LoadDropdowns()
+        {
+            ViewBag.CategoryOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Electrical", Text = "Electrical" },
+                new SelectListItem { Value = "Plumbing", Text = "Plumbing" },
+                new SelectListItem { Value = "HVAC", Text = "HVAC" },
+                new SelectListItem { Value = "General", Text = "General" }
+            };
+
+            ViewBag.PriorityOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Low", Text = "Low" },
+                new SelectListItem { Value = "Medium", Text = "Medium" },
+                new SelectListItem { Value = "High", Text = "High" }
+            };
         }
     }
 }

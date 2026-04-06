@@ -32,15 +32,33 @@ namespace PLMP_MVC.Controllers
 
             var myRequests = await _context.MaintenanceRequests
                 .Where(r => r.TenantId == tenantId)
+                .OrderByDescending(r => r.RequestId)
+                .ToListAsync();
+
+            var myApplications = await _context.Applications
+                .Where(a => a.TenantId == tenantId)
+                .OrderByDescending(a => a.ApplicationId)
                 .ToListAsync();
 
             var myLeases = await _context.Leases
                 .Where(l => l.TenantId == tenantId)
+                .OrderByDescending(l => l.LeaseId)
+                .ToListAsync();
+
+            var myPayments = await _context.Payments
+                .Join(_context.Leases,
+                    p => p.LeaseId,
+                    l => l.LeaseId,
+                    (p, l) => new { Payment = p, Lease = l })
+                .Where(x => x.Lease.TenantId == tenantId)
+                .Select(x => x.Payment)
                 .ToListAsync();
 
             ViewBag.AvailableUnits = availableUnits;
             ViewBag.MyRequests = myRequests;
+            ViewBag.MyApplications = myApplications;
             ViewBag.MyLeases = myLeases;
+            ViewBag.MyPayments = myPayments;
 
             return View();
         }
@@ -68,10 +86,10 @@ namespace PLMP_MVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateMaintenanceRequest(MaintenanceRequest request)
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
-
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");
 
@@ -85,11 +103,7 @@ namespace PLMP_MVC.Controllers
 
             if (string.IsNullOrWhiteSpace(request.Description))
                 ModelState.AddModelError("Description", "Please enter a description.");
-            ModelState.Remove("Tenant");
-            ModelState.Remove("Staff");
-            ModelState.Remove("TenantId");
-            ModelState.Remove("StaffId");
-            ModelState.Remove("Status");
+
             if (!ModelState.IsValid)
             {
                 ViewBag.CategoryOptions = new List<SelectListItem>
@@ -108,12 +122,10 @@ namespace PLMP_MVC.Controllers
                     new SelectListItem { Value = "High", Text = "High" }
                 };
 
-                TempData["Error"] = "Please complete all required fields.";
                 return View(request);
             }
 
             request.TenantId = tenantId;
-            request.StaffId = null;
             request.Status = "Submitted";
 
             _context.MaintenanceRequests.Add(request);
@@ -126,15 +138,25 @@ namespace PLMP_MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Apply(int id)
         {
-            var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitId == id);
+            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+
+            if (string.IsNullOrEmpty(tenantIdClaim))
+                return RedirectToAction("Login", "Auth");
+
+            var unit = await _context.Units
+                .FirstOrDefaultAsync(u => u.UnitId == id && u.AvailabilityStatus == "Vacant");
 
             if (unit == null)
-                return NotFound();
+            {
+                TempData["Error"] = "This unit is not available.";
+                return RedirectToAction("Dashboard");
+            }
 
             return View(unit);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApplyConfirmed(int id)
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
@@ -144,7 +166,8 @@ namespace PLMP_MVC.Controllers
 
             int tenantId = int.Parse(tenantIdClaim);
 
-            var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitId == id);
+            var unit = await _context.Units
+                .FirstOrDefaultAsync(u => u.UnitId == id);
 
             if (unit == null)
                 return NotFound();
@@ -155,38 +178,38 @@ namespace PLMP_MVC.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            var existingLease = await _context.Leases
-                .FirstOrDefaultAsync(l => l.UnitId == id && l.TenantId == tenantId);
+            var existingApplication = await _context.Applications
+                .FirstOrDefaultAsync(a => a.UnitId == id && a.TenantId == tenantId &&
+                    (a.ApplicationStatus == "Submitted" || a.ApplicationStatus == "Pending"));
 
-            if (existingLease != null)
+            if (existingApplication != null)
             {
                 TempData["Error"] = "You already applied for this unit.";
                 return RedirectToAction("Dashboard");
             }
 
-            var newLease = new Lease
+            var application = new Application
             {
                 UnitId = unit.UnitId,
                 TenantId = tenantId,
-                ManagerId = 1,
-                ApplicationStatus = "Pending",
-                LeaseStatus = "Pending",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddYears(1)
+                ApplicationDate = DateTime.Now,
+                ApplicationStatus = "Submitted"
             };
 
-            _context.Leases.Add(newLease);
-
             unit.AvailabilityStatus = "Pending";
+
+            _context.Applications.Add(application);
             _context.Units.Update(unit);
 
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = "Your application has been submitted successfully.";
+            TempData["Success"] = "Application submitted successfully.";
             return RedirectToAction("Dashboard");
         }
 
-        public async Task<IActionResult> Contract(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pay(int id)
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
 
@@ -195,13 +218,26 @@ namespace PLMP_MVC.Controllers
 
             int tenantId = int.Parse(tenantIdClaim);
 
-            var lease = await _context.Leases
-                .FirstOrDefaultAsync(l => l.LeaseId == id && l.TenantId == tenantId);
+            var payment = await _context.Payments
+                .Join(_context.Leases,
+                    p => p.LeaseId,
+                    l => l.LeaseId,
+                    (p, l) => new { Payment = p, Lease = l })
+                .Where(x => x.Payment.PaymentId == id && x.Lease.TenantId == tenantId)
+                .Select(x => x.Payment)
+                .FirstOrDefaultAsync();
 
-            if (lease == null)
+            if (payment == null)
                 return NotFound();
 
-            return View(lease);
+            payment.PaymentStatus = "Paid";
+            payment.Balance = 0;
+
+            _context.Payments.Update(payment);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Payment completed successfully.";
+            return RedirectToAction("Dashboard");
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace PLMP_S6G5.Models;
@@ -30,8 +31,10 @@ public partial class Unit
 
     [ForeignKey("BuildingId")]
     [InverseProperty("Units")]
+    [ValidateNever]
     public virtual Building Building { get; set; } = null!;
 
     [InverseProperty("Unit")]
+    [ValidateNever]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();
 }

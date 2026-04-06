@@ -4,6 +4,7 @@
     ViewData["Title"] = "Admin Dashboard";
 
     var leaseApplications = ViewBag.LeaseApplications as List<Lease>;
+    var maintenanceRequests = ViewBag.MaintenanceRequests as List<MaintenanceRequest>;
 }
 
 <style>
@@ -52,6 +53,7 @@
         border-radius: 22px;
         padding: 24px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
     }
 
         .section-card h3 {
@@ -111,6 +113,13 @@
 {
     <div class="alert alert-success">
         @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
     </div>
 }
 
@@ -189,6 +198,45 @@
                                 <span>-</span>
                             }
                         </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div class="section-card">
+    <h3>Maintenance Requests</h3>
+
+    @if (maintenanceRequests == null || !maintenanceRequests.Any())
+    {
+        <p class="empty-text">No maintenance requests available.</p>
+    }
+    else
+    {
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Tenant ID</th>
+                    <th>Category Type</th>
+                    <th>Priority</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Staff ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in maintenanceRequests)
+                {
+                    <tr>
+                        <td>@request.RequestId</td>
+                        <td>@request.TenantId</td>
+                        <td>@request.CategoryType</td>
+                        <td>@request.Priority</td>
+                        <td>@request.Description</td>
+                        <td>@request.Status</td>
+                        <td>@request.StaffId</td>
                     </tr>
                 }
             </tbody>

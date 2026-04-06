@@ -26,7 +26,12 @@ namespace PLMP_MVC.Controllers
                 .OrderByDescending(l => l.LeaseId)
                 .ToListAsync();
 
+            var maintenanceRequests = await _context.MaintenanceRequests
+                .OrderByDescending(r => r.RequestId)
+                .ToListAsync();
+
             ViewBag.LeaseApplications = leaseApplications;
+            ViewBag.MaintenanceRequests = maintenanceRequests;
 
             return View();
         }
@@ -45,6 +50,12 @@ namespace PLMP_MVC.Controllers
 
             if (unit == null)
                 return NotFound();
+
+            if (unit.AvailabilityStatus != "Vacant")
+            {
+                TempData["Error"] = "This unit is already leased.";
+                return RedirectToAction("Index");
+            }
 
             lease.ApplicationStatus = "Approved";
             lease.LeaseStatus = "Active";

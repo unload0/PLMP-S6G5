@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PLMP_S6G5.Models;
 
@@ -17,30 +18,19 @@ namespace PLMP_MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Units.ToListAsync());
+            var units = await _context.Units.ToListAsync();
+            return View(units);
         }
 
-        public async Task<IActionResult> AvailableUnits()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            var availableUnits = await _context.Units
-                .Where(u => u.AvailabilityStatus == "Vacant")
-                .ToListAsync();
+            ViewBag.Buildings = new SelectList(
+                await _context.Buildings.ToListAsync(),
+                "BuildingId",
+                "Name"
+            );
 
-            return View(availableUnits);
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var unit = await _context.Units.FirstOrDefaultAsync(m => m.UnitId == id);
-            if (unit == null) return NotFound();
-
-            return View(unit);
-        }
-
-        public IActionResult Create()
-        {
             return View();
         }
 
@@ -48,21 +38,53 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Unit unit)
         {
-            if (ModelState.IsValid)
+            ModelState.Remove("Building");
+            ModelState.Remove("Leases");
+
+            if (!ModelState.IsValid)
             {
-                _context.Add(unit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Buildings = new SelectList(
+                    await _context.Buildings.ToListAsync(),
+                    "BuildingId",
+                    "Name",
+                    unit.BuildingId
+                );
+
+                return View(unit);
             }
+
+            if (string.IsNullOrWhiteSpace(unit.AvailabilityStatus))
+                unit.AvailabilityStatus = "Vacant";
+
+            _context.Units.Add(unit);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Unit added successfully.";
+            return RedirectToAction("Create");
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitId == id);
+            if (unit == null)
+                return NotFound();
+
             return View(unit);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null) return NotFound();
-
             var unit = await _context.Units.FindAsync(id);
-            if (unit == null) return NotFound();
+            if (unit == null)
+                return NotFound();
+
+            ViewBag.Buildings = new SelectList(
+                await _context.Buildings.ToListAsync(),
+                "BuildingId",
+                "Name",
+                unit.BuildingId
+            );
 
             return View(unit);
         }
@@ -71,23 +93,34 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Unit unit)
         {
-            if (id != unit.UnitId) return NotFound();
+            if (id != unit.UnitId)
+                return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Update(unit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Buildings = new SelectList(
+                    await _context.Buildings.ToListAsync(),
+                    "BuildingId",
+                    "Name",
+                    unit.BuildingId
+                );
+
+                return View(unit);
             }
-            return View(unit);
+
+            _context.Update(unit);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Unit updated successfully.";
+            return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null) return NotFound();
-
-            var unit = await _context.Units.FirstOrDefaultAsync(m => m.UnitId == id);
-            if (unit == null) return NotFound();
+            var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitId == id);
+            if (unit == null)
+                return NotFound();
 
             return View(unit);
         }
@@ -97,96 +130,14 @@ namespace PLMP_MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var unit = await _context.Units.FindAsync(id);
-            if (unit != null)
-            {
-                _context.Units.Remove(unit);
-                await _context.SaveChangesAsync();
-            }
+            if (unit == null)
+                return NotFound();
 
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ApplyForUnit(int unitId)
-        {
-            var unit = await _context.Units.FindAsync(unitId);
-
-            if (unit == null || unit.AvailabilityStatus != "Vacant")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            var newLease = new Lease
-            {
-                UnitId = unitId,
-                TenantId = 1,
-                ManagerId = 1,
-                ApplicationStatus = "Pending",
-                LeaseStatus = "Pending",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddYears(1)
-            };
-
-            _context.Leases.Add(newLease);
+            _context.Units.Remove(unit);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("ConfirmApplication", "Units", new { id = newLease.LeaseId });
-        }
-
-        public async Task<IActionResult> ConfirmApplication(int id)
-        {
-            var lease = await _context.Leases
-                .Include(l => l.Unit)
-                .FirstOrDefaultAsync(l => l.LeaseId == id);
-
-            if (lease == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View(lease);
-        }
-
-        public async Task<IActionResult> PayForLease(int leaseId)
-        {
-            var lease = await _context.Leases
-                .Include(l => l.Unit)
-                .FirstOrDefaultAsync(l => l.LeaseId == leaseId);
-
-            if (lease == null || lease.LeaseStatus != "Pending")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            var payment = new Payment
-            {
-                LeaseId = leaseId,
-                InstallmentAmount = lease.Unit.RentAmount,
-                DateOfIssue = DateTime.Now,
-                Balance = 0,
-                PaymentStatus = "Paid"
-            };
-
-            _context.Payments.Add(payment);
-            lease.LeaseStatus = "Active";
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("ContractSigned", "Units", new { leaseId = leaseId });
-        }
-
-        public async Task<IActionResult> ContractSigned(int leaseId)
-        {
-            var lease = await _context.Leases
-                .Include(l => l.Unit)
-                .FirstOrDefaultAsync(l => l.LeaseId == leaseId);
-
-            if (lease == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View(lease);
+            TempData["Success"] = "Unit deleted successfully.";
+            return RedirectToAction("Index");
         }
     }
 }

@@ -21,6 +21,7 @@ public partial class PLMPS6G5 : DbContext
 
     public virtual DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
 
+    public virtual DbSet<Application> Applications { get; set; }
     public virtual DbSet<MaintenanceStaff> MaintenanceStaffs { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
@@ -37,6 +38,16 @@ public partial class PLMPS6G5 : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Application>(entity =>
+        {
+            entity.HasOne(d => d.Tenant).WithMany()
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Tenant_TO_Application");
+
+            entity.HasOne(d => d.Unit).WithMany()
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Unit_TO_Application");
+        });
         modelBuilder.Entity<Lease>(entity =>
         {
             entity.HasOne(d => d.Manager).WithMany(p => p.Leases)
