@@ -1,0 +1,56 @@
+﻿@model PLMP_S6G5.Models.Unit
+
+@{
+    ViewData["Title"] = "Apply";
+}
+
+<style>
+    .card-box {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .btn-main {
+        background: #2563eb;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: none;
+    }
+
+    .error-box {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="card-box">
+    <h2>Apply for Unit</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="error-box">
+            @TempData["Error"]
+        </div>
+    }
+
+    <p><strong>Unit:</strong> @Model.UnitId</p>
+    <p><strong>Building:</strong> @Model.BuildingId</p>
+    <p><strong>Type:</strong> @Model.Type</p>
+    <p><strong>Rent:</strong> @Model.RentAmount</p>
+
+    <form asp-action="ApplyConfirmed" asp-controller="User" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.UnitId" />
+        <button type="submit" class="btn-main">Confirm</button>
+    </form>
+</div>

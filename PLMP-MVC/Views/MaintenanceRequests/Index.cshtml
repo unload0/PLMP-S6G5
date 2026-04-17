@@ -1,0 +1,117 @@
+﻿@model IEnumerable<PLMP_S6G5.Models.MaintenanceRequest>
+@using PLMP_S6G5.Models
+
+@{
+    ViewData["Title"] = "Maintenance Requests";
+    var staffList = ViewBag.StaffList as List<MaintenanceStaff>;
+}
+
+<style>
+    .page-title {
+        font-size: 30px;
+        font-weight: 800;
+        color: #9f1239;
+        margin-bottom: 20px;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+        .custom-table th, .custom-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .custom-table th {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+    .btn-assign {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .staff-select {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<h1 class="page-title">Maintenance Requests</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<table class="custom-table">
+    <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Tenant ID</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Assigned Staff</th>
+            <th>Assign Technician</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.RequestId</td>
+                <td>@item.TenantId</td>
+                <td>@item.CategoryType</td>
+                <td>@item.Priority</td>
+                <td>@item.Description</td>
+                <td>@item.Status</td>
+                <td>
+                    @if (item.StaffId != null)
+                    {
+                        <span>@item.StaffId</span>
+                    }
+                    else
+                    {
+                        <span>Not Assigned</span>
+                    }
+                </td>
+                <td>
+                    <form asp-action="AssignTechnician" method="post" style="display:flex; gap:8px; align-items:center;">
+                        <input type="hidden" name="requestId" value="@item.RequestId" />
+
+                        <select name="staffId" class="staff-select" required>
+                            <option value="">Select Technician</option>
+                            @if (staffList != null)
+                            {
+                                @foreach (var staff in staffList)
+                                {
+                                    <option value="@staff.StaffId">@staff.StaffId - @staff.Name</option>
+                                }
+                            }
+                        </select>
+
+                        <button type="submit" class="btn-assign">Assign</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -22,6 +22,35 @@ namespace PLMP_S6G5.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("PLMP_S6G5.Models.Application", b =>
+                {
+                    b.Property<int>("ApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"));
+
+                    b.Property<DateTime>("ApplicationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ApplicationStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("Applications");
+                });
+
             modelBuilder.Entity("PLMP_S6G5.Models.Building", b =>
                 {
                     b.Property<int>("BuildingId")
@@ -113,7 +142,7 @@ namespace PLMP_S6G5.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("StaffId")
+                    b.Property<int?>("StaffId")
                         .HasColumnType("int")
                         .HasColumnName("StaffID");
 
@@ -276,6 +305,25 @@ namespace PLMP_S6G5.Migrations
                     b.ToTable("Unit");
                 });
 
+            modelBuilder.Entity("PLMP_S6G5.Models.Application", b =>
+                {
+                    b.HasOne("PLMP_S6G5.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Tenant_TO_Application");
+
+                    b.HasOne("PLMP_S6G5.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Unit_TO_Application");
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("Unit");
+                });
+
             modelBuilder.Entity("PLMP_S6G5.Models.Lease", b =>
                 {
                     b.HasOne("PLMP_S6G5.Models.PropertyManager", "Manager")
@@ -308,7 +356,6 @@ namespace PLMP_S6G5.Migrations
                     b.HasOne("PLMP_S6G5.Models.MaintenanceStaff", "Staff")
                         .WithMany("MaintenanceRequests")
                         .HasForeignKey("StaffId")
-                        .IsRequired()
                         .HasConstraintName("FK_MaintenanceStaff_TO_MaintenanceRequest");
 
                     b.HasOne("PLMP_S6G5.Models.Tenant", "Tenant")

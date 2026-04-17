@@ -1,0 +1,223 @@
+﻿@using PLMP_S6G5.Models
+
+@{
+    ViewData["Title"] = "User Dashboard";
+
+    var availableUnits = ViewBag.AvailableUnits as List<Unit> ?? new List<Unit>();
+    var myRequests = ViewBag.MyRequests as List<MaintenanceRequest> ?? new List<MaintenanceRequest>();
+    var myLeases = ViewBag.MyLeases as List<Lease> ?? new List<Lease>();
+    var myPayments = ViewBag.MyPayments as List<Payment> ?? new List<Payment>();
+}
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .card-box {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        height: 100%;
+    }
+
+    .btn-main {
+        background: #2563eb;
+        color: white;
+        border-radius: 8px;
+        padding: 6px 12px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-main:hover {
+        background: #1e40af;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-pay {
+        background: #f59e0b;
+        color: white;
+        border-radius: 8px;
+        padding: 6px 12px;
+        border: none;
+    }
+
+    .btn-pay:hover {
+        background: #e27d00;
+    }
+
+    .section-header {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .section-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .success-box {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .error-box {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+</style>
+
+<h1>User Dashboard</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="success-box">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="error-box">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="section-container">
+    <div class="card-box">
+        <h3 class="section-header">Available Units</h3>
+        @if (!availableUnits.Any())
+        {
+            <p>No available units.</p>
+        }
+        else
+        {
+            <table class="table">
+                <tbody>
+                    @foreach (var unit in availableUnits)
+                    {
+                        <tr>
+                            <td>@unit.UnitId</td>
+                            <td>@unit.Type</td>
+                            <td>@unit.RentAmount</td>
+                            <td>
+                                <a asp-controller="User" asp-action="Apply" asp-route-id="@unit.UnitId" class="btn-main">
+                                    Apply
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="card-box">
+        <h3 class="section-header">My Maintenance Requests</h3>
+        @if (!myRequests.Any())
+        {
+            <p>No maintenance requests found.</p>
+        }
+        else
+        {
+            <table class="table">
+                <tbody>
+                    @foreach (var request in myRequests)
+                    {
+                        <tr>
+                            <td>@request.RequestId</td>
+                            <td>@request.CategoryType</td>
+                            <td>@request.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="card-box">
+        <h3 class="section-header">My Leases</h3>
+        @if (!myLeases.Any())
+        {
+            <p>No leases found.</p>
+        }
+        else
+        {
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Lease ID</td>
+                        <td>Unit ID</td>
+                        <td>Lease Status</td>
+                        <td>Application Status</td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    @foreach (var lease in myLeases)
+                    {
+                        <tr>
+                            <td>@lease.LeaseId</td>
+                            <td>@lease.UnitId</td>
+                            <td>@lease.LeaseStatus</td>
+                            <td>@lease.ApplicationStatus</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="card-box">
+        <h3 class="section-header">Payments</h3>
+        @if (!myPayments.Any())
+        {
+            <p>No payments found.</p>
+        }
+        else
+        {
+            <table class="table">
+                <tbody>
+                    @foreach (var payment in myPayments)
+                    {
+                        <tr>
+                            <td>@payment.InstallmentAmount</td>
+                            <td>@payment.PaymentStatus</td>
+                            <td>
+                                @if (payment.PaymentStatus != "Paid")
+                                {
+                                    <form asp-controller="User" asp-action="Pay" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@payment.PaymentId" />
+                                        <button type="submit" class="btn-pay">Pay</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="card-box">
+        <h3 class="section-header">Create Maintenance Request</h3>
+        <a asp-controller="User" asp-action="CreateMaintenanceRequest" class="btn-main">Create Request</a>
+    </div>
+</div>

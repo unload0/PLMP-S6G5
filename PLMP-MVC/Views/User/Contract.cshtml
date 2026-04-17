@@ -1,0 +1,48 @@
+﻿@model PLMP_S6G5.Models.Lease
+
+@{
+    ViewData["Title"] = "Contract";
+}
+
+<style>
+    .contract-card {
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 32px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .contract-title {
+        color: #15803d;
+        font-weight: 800;
+        margin-bottom: 24px;
+    }
+
+    .contract-box {
+        background: #f0fdf4;
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+        .contract-box p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+</style>
+
+<div class="contract-card">
+    <h2 class="contract-title">Lease Contract</h2>
+
+    <div class="contract-box">
+        <p><strong>Lease ID:</strong> @Model.LeaseId</p>
+        <p><strong>Unit ID:</strong> @Model.UnitId</p>
+        <p><strong>Tenant ID:</strong> @Model.TenantId</p>
+        <p><strong>Manager ID:</strong> @Model.ManagerId</p>
+        <p><strong>Application Status:</strong> @Model.ApplicationStatus</p>
+        <p><strong>Lease Status:</strong> @Model.LeaseStatus</p>
+        <p><strong>Start Date:</strong> @Model.StartDate</p>
+        <p><strong>End Date:</strong> @Model.EndDate</p>
+    </div>
+</div>

@@ -54,9 +54,7 @@ public partial class PLMPS6G5 : DbContext
 
         modelBuilder.Entity<MaintenanceRequest>(entity =>
         {
-            entity.HasOne(d => d.Staff).WithMany(p => p.MaintenanceRequests)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MaintenanceStaff_TO_MaintenanceRequest");
+            entity.HasOne(d => d.Staff).WithMany(p => p.MaintenanceRequests).HasConstraintName("FK_MaintenanceStaff_TO_MaintenanceRequest");
 
             entity.HasOne(d => d.Tenant).WithMany(p => p.MaintenanceRequests)
                 .OnDelete(DeleteBehavior.ClientSetNull)

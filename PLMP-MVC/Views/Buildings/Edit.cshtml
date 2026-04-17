@@ -1,0 +1,93 @@
+﻿@model PLMP_S6G5.Models.Building
+
+@{
+    ViewData["Title"] = "Edit Building";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        font-family: 'Segoe UI';
+    }
+
+    .box {
+        background: white;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .btn-custom {
+        background: #667eea;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+        .btn-custom:hover {
+            background: #5563c1;
+            color: white;
+        }
+
+    .text-danger {
+        color: red;
+        font-size: 14px;
+    }
+</style>
+
+<div class="box">
+    <h1>Edit Building</h1>
+
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" asp-for="BuildingId" />
+
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Address"></label>
+            <input asp-for="Address" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-custom">Update</button>
+        <a asp-action="Index" class="btn-custom">Back</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
