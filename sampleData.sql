@@ -38,9 +38,9 @@ SET IDENTITY_INSERT [dbo].[Tenant] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Lease] ON 
 GO
-INSERT [dbo].[Lease] ([LeaseID], [UnitID], [TenantID], [ManagerID], [ApplicationStatus], [LeaseStatus], [StartDate], [EndDate]) VALUES (1, 1, 1, 1, N'Approved/Rejected', N'Active', CAST(N'2024-01-01T00:00:00.0000000' AS DateTime2), CAST(N'2025-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[Lease] ([LeaseID], [UnitID], [TenantID], [ManagerID], [ApplicationStatus], [LeaseStatus], [StartDate], [EndDate]) VALUES (1, 1, 1, 1, N'Approved', N'Active', CAST(N'2024-01-01T00:00:00.0000000' AS DateTime2), CAST(N'2025-01-01T00:00:00.0000000' AS DateTime2))
 GO
-INSERT [dbo].[Lease] ([LeaseID], [UnitID], [TenantID], [ManagerID], [ApplicationStatus], [LeaseStatus], [StartDate], [EndDate]) VALUES (2, 3, 2, 2, N'Approved/Rejected', N'Active', CAST(N'2023-06-01T00:00:00.0000000' AS DateTime2), CAST(N'2024-06-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[Lease] ([LeaseID], [UnitID], [TenantID], [ManagerID], [ApplicationStatus], [LeaseStatus], [StartDate], [EndDate]) VALUES (2, 3, 2, 2, N'Approved', N'Active', CAST(N'2023-06-01T00:00:00.0000000' AS DateTime2), CAST(N'2024-06-01T00:00:00.0000000' AS DateTime2))
 GO
 SET IDENTITY_INSERT [dbo].[Lease] OFF
 GO

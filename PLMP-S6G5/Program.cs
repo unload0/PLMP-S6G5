@@ -10,7 +10,6 @@ namespace PLMP_S6G5
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
             // Add services to the container.
             builder.Services.AddDbContext<PLMPS6G5>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
