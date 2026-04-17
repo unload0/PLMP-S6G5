@@ -51,7 +51,7 @@ namespace PLMP_MVC.Controllers
             if (unit == null)
                 return NotFound();
 
-            if (unit.AvailabilityStatus != "Vacant")
+            if (unit.AvailabilityStatus == "Leased")
             {
                 TempData["Error"] = "This unit is already leased.";
                 return RedirectToAction("Index");
