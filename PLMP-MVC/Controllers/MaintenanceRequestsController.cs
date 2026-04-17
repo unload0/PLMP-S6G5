@@ -75,7 +75,7 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MaintenanceRequest request)
         {
-            request.Status = "Pending";
+            request.Status = "Submitted";
 
             var tenantIdClaim = User.FindFirst("TenantId")?.Value
                                 ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -88,7 +88,8 @@ namespace PLMP_MVC.Controllers
             if (!ModelState.IsValid)
             {
                 LoadDropdowns();
-                TempData["Error"] = "Please fill in all required fields correctly.";
+                //TempData["Error"] = "Please fill in all required fields correctly.";
+                return BadRequest(ModelState);
                 return View("~/Views/User/CreateMaintenanceRequest.cshtml", request);
             }
 
@@ -104,9 +105,11 @@ namespace PLMP_MVC.Controllers
         {
             ViewBag.CategoryOptions = new List<SelectListItem>
             {
-                new SelectListItem { Value = "Electrical", Text = "Electrical" },
                 new SelectListItem { Value = "Plumbing", Text = "Plumbing" },
+                new SelectListItem { Value = "Wi-Fi", Text = "Wi-Fi" },
                 new SelectListItem { Value = "HVAC", Text = "HVAC" },
+                new SelectListItem { Value = "Electricity", Text = "Electricity" },
+                new SelectListItem { Value = "Hazard", Text = "Hazard" },
                 new SelectListItem { Value = "General", Text = "General" }
             };
 
