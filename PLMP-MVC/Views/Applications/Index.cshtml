@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PLMP_S6G5.Models.Application>
+﻿@* @model IEnumerable<PLMP_S6G5.Models.Application>
 
 @{
     ViewData["Title"] = "Applications";
@@ -95,7 +95,7 @@
                     <td>@item.ApplicationDate</td>
                     <td>@item.ApplicationStatus</td>
                     <td>
-                        @if (item.ApplicationStatus == "Submitted" || item.ApplicationStatus == "Pending")
+                        @if (item.ApplicationStatus == "Pending")
                         {
                             <form asp-controller="Applications" asp-action="Approve" method="post" style="display:inline;">
                                 @Html.AntiForgeryToken()
@@ -114,4 +114,4 @@
             }
         </tbody>
     </table>
-</div>
+</div> *@

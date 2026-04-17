@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace PLMP_S6G5.Models;
@@ -18,7 +17,7 @@ public partial class MaintenanceRequest
     public int TenantId { get; set; }
 
     [Column("StaffID")]
-    public int? StaffId { get; set; }
+    public int StaffId { get; set; }
 
     [StringLength(300)]
     public string? CategoryType { get; set; }
@@ -33,11 +32,9 @@ public partial class MaintenanceRequest
 
     [ForeignKey("StaffId")]
     [InverseProperty("MaintenanceRequests")]
-    [ValidateNever]
-    public virtual MaintenanceStaff? Staff { get; set; }
+    public virtual MaintenanceStaff Staff { get; set; } = null!;
 
     [ForeignKey("TenantId")]
     [InverseProperty("MaintenanceRequests")]
-    [ValidateNever]
     public virtual Tenant Tenant { get; set; } = null!;
 }

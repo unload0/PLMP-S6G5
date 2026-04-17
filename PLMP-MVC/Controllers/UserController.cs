@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PLMP_S6G5.Models;
+using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PLMP_MVC.Controllers
 {
@@ -35,10 +36,10 @@ namespace PLMP_MVC.Controllers
                 .OrderByDescending(r => r.RequestId)
                 .ToListAsync();
 
-            var myApplications = await _context.Applications
-                .Where(a => a.TenantId == tenantId)
-                .OrderByDescending(a => a.ApplicationId)
-                .ToListAsync();
+            //var myApplications = await _context.Applications
+            //    .Where(a => a.TenantId == tenantId)
+            //    .OrderByDescending(a => a.ApplicationId)
+            //    .ToListAsync();
 
             var myLeases = await _context.Leases
                 .Where(l => l.TenantId == tenantId)
@@ -56,7 +57,7 @@ namespace PLMP_MVC.Controllers
 
             ViewBag.AvailableUnits = availableUnits;
             ViewBag.MyRequests = myRequests;
-            ViewBag.MyApplications = myApplications;
+            //ViewBag.MyApplications = myApplications;
             ViewBag.MyLeases = myLeases;
             ViewBag.MyPayments = myPayments;
 
@@ -178,9 +179,12 @@ namespace PLMP_MVC.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            var existingApplication = await _context.Applications
+            //var existingApplication = await _context.Applications
+            //    .FirstOrDefaultAsync(a => a.UnitId == id && a.TenantId == tenantId &&
+            //        (a.ApplicationStatus == "Submitted" || a.ApplicationStatus == "Pending"));
+            var existingApplication = await _context.Leases
                 .FirstOrDefaultAsync(a => a.UnitId == id && a.TenantId == tenantId &&
-                    (a.ApplicationStatus == "Submitted" || a.ApplicationStatus == "Pending"));
+                    (a.ApplicationStatus == "Screening"));
 
             if (existingApplication != null)
             {
@@ -188,17 +192,49 @@ namespace PLMP_MVC.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            var application = new Application
+            //var application = new Application
+            //{
+            //    UnitId = unit.UnitId,
+            //    TenantId = tenantId,
+            //    ApplicationDate = DateTime.Now,
+            //    ApplicationStatus = "Submitted"
+            //};
+            int managerId = 0;
+
+            var managerIdClaim = User.FindFirst("ManagerId")?.Value;
+            if (!string.IsNullOrEmpty(managerIdClaim) && int.TryParse(managerIdClaim, out int parsedManagerId))
+            {
+                managerId = parsedManagerId;
+            }
+            else
+            {
+                managerId = await _context.Leases
+                    .Where(l => l.ManagerId > 0)
+                    .Select(l => l.ManagerId)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (managerId == 0)
+            {
+                TempData["Error"] = "No valid Manager ID was found. Please make sure there is a manager record in the database.";
+                return RedirectToAction("Index");
+            }
+
+            var lease = new Lease
             {
                 UnitId = unit.UnitId,
                 TenantId = tenantId,
-                ApplicationDate = DateTime.Now,
-                ApplicationStatus = "Submitted"
+                ManagerId = managerId,
+                ApplicationStatus = "Screening",
+                LeaseStatus = "Pending",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddYears(1)
             };
 
             unit.AvailabilityStatus = "Pending";
 
-            _context.Applications.Add(application);
+            //_context.Applications.Add(application);
+            _context.Leases.Add(lease);
             _context.Units.Update(unit);
 
             await _context.SaveChangesAsync();

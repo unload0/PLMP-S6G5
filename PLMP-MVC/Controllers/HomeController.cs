@@ -86,7 +86,7 @@ namespace PLMP_MVC.Controllers
                 return NotFound();
 
             lease.ApplicationStatus = "Rejected";
-            lease.LeaseStatus = "Rejected";
+            lease.LeaseStatus = "Termination";
             unit.AvailabilityStatus = "Vacant";
 
             _context.Leases.Update(lease);

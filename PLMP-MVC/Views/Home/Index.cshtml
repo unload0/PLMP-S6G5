@@ -181,7 +181,7 @@
                         <td>@lease.StartDate</td>
                         <td>@lease.EndDate</td>
                         <td>
-                            @if (lease.ApplicationStatus == "Pending")
+                            @if (lease.ApplicationStatus == "Screening")
                             {
                                 <form asp-action="ApproveLease" asp-controller="Home" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@lease.LeaseId" />
