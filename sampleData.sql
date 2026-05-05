@@ -46,7 +46,7 @@ SET IDENTITY_INSERT [dbo].[MaintenanceStaff] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[MaintenanceRequest] ON 
-INSERT [dbo].[MaintenanceRequest] ([RequestID], [TenantID], [StaffID], [CategoryType], [Priority], [Description], [Status]) VALUES (1, 1, 1, N'Plumbing', N'High', N'Kitchen sink leaking heavily.', N'Submitted')
-INSERT [dbo].[MaintenanceRequest] ([RequestID], [TenantID], [StaffID], [CategoryType], [Priority], [Description], [Status]) VALUES (2, 2, 2, N'Electricity', N'Medium', N'Flickering lights in the main hall.', N'Submitted')
+INSERT [dbo].[MaintenanceRequest] ([RequestID], [TenantID], [StaffID], [CategoryType], [Priority], [Description], [Status]) VALUES (1, 1, NULL, N'Plumbing', N'High', N'Kitchen sink leaking heavily.', N'Submitted')
+INSERT [dbo].[MaintenanceRequest] ([RequestID], [TenantID], [StaffID], [CategoryType], [Priority], [Description], [Status]) VALUES (2, 2, NULL, N'Electricity', N'Medium', N'Flickering lights in the main hall.', N'Submitted')
 SET IDENTITY_INSERT [dbo].[MaintenanceRequest] OFF
 GO
