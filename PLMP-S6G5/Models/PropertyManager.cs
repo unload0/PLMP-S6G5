@@ -14,13 +14,13 @@ public partial class PropertyManager
     public int ManagerId { get; set; }
 
     [StringLength(300)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [StringLength(20)]
     public string? PhoneNumber { get; set; }
 
     [StringLength(300)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [InverseProperty("Manager")]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();

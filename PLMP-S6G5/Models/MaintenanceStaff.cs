@@ -14,7 +14,13 @@ public partial class MaintenanceStaff
     public int StaffId { get; set; }
 
     [StringLength(300)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
+
+    [StringLength(20)]
+    public string? PhoneNumber { get; set; }
+
+    [StringLength(300)]
+    public string Email { get; set; } = null!;
 
     [StringLength(300)]
     public string? SkillProfile { get; set; }

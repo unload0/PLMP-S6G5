@@ -13,11 +13,14 @@ public partial class Tenant
     [Column("TenantID")]
     public int TenantId { get; set; }
 
+    [StringLength(300)]
+    public string Name { get; set; } = null!;
+
     [StringLength(20)]
     public string? PhoneNumber { get; set; }
 
     [StringLength(300)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [InverseProperty("Tenant")]
     public virtual ICollection<Lease> Leases { get; set; } = new List<Lease>();

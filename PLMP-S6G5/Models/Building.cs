@@ -14,7 +14,7 @@ public partial class Building
     public int BuildingId { get; set; }
 
     [StringLength(300)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [StringLength(300)]
     public string? Address { get; set; }
