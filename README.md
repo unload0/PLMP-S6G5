@@ -15,3 +15,6 @@ Click on execute to create the schema, then do the same steps for the sample dat
 
 
 Once you've created the database schema and filled the sample data, you can now clone the project and create a new branch named after the feature you want to work with. Use Github Desktop to work with the repository, you can download it [here](https://desktop.github.com/download/)
+
+This drop-down will let you switch between both active projects, when you select the MVC project the API gets compiled with it.
+<img width="178" height="78" alt="image" src="https://github.com/user-attachments/assets/71890bf5-1db8-4b07-8a8a-1b0011141841" />
