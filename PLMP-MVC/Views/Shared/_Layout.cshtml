@@ -81,6 +81,10 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="MaintenanceRequests" asp-action="Index">Requests</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Tenants" asp-action="Index">Tenants</a>
+                        </li>
                     }
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))

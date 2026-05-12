@@ -1,7 +1,7 @@
-﻿@model IEnumerable<PLMP_S6G5.Models.Lease>
+﻿@model IEnumerable<PLMP_S6G5.Models.Tenant>
 
 @{
-    ViewData["Title"] = "Leases";
+    ViewData["Title"] = "Tenants";
 }
 
 <style>
@@ -109,28 +109,23 @@
             color: white;
         }
 </style>
-
 <div class="container container-box">
-    <h1>🗒️ Leases</h1>
+    <h1>Tenants</h1>
 
     @if (User.IsInRole("Admin"))
     {
         <div class="top-bar">
-            <a asp-action="Create" class="btn-custom">+ Add Lease</a>
+            <a asp-action="Create" class="btn-custom">+ Add Tenant</a>
         </div>
     }
 
     <table>
         <thead>
             <tr>
-                <th>Lease ID</th>
-                <th>Unit ID</th>
-                <th>Tenant Name</th>
-                <th>Manager Name</th>
-                <th>Application Status</th>
-                <th>Lease Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Tenant ID</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
                 @if (User.IsInRole("Admin"))
                 {
                     <th>Actions</th>
@@ -141,20 +136,16 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.LeaseId</td>
-                    <td>@item.UnitId</td>
-                    <td>@item.Tenant.Name</td>
-                    <td>@item.Manager.Name</td>
-                    <td>@item.ApplicationStatus</td>
-                    <td>@item.LeaseStatus</td>
-                    <td>@item.StartDate?.ToString("MM/dd/yyyy")</td>
-                    <td>@item.EndDate?.ToString("MM/dd/yyyy")</td>
+                    <td>@item.TenantId</td>
+                    <td>@item.Name</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.Email</td>
                     @if (User.IsInRole("Admin"))
                     {
                         <td class="action-links">
-                            <a asp-action="Details" asp-route-id="@item.LeaseId" class="btn-action btn-details">Details</a>
-                            <a asp-action="Edit" asp-route-id="@item.LeaseId" class="btn-action btn-edit">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.LeaseId" class="btn-action btn-delete">Delete</a>
+                            <a asp-action="Details" asp-route-id="@item.TenantId" class="btn-action btn-details">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.TenantId" class="btn-action btn-edit">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.TenantId" class="btn-action btn-delete">Delete</a>
                         </td>
                     }
                 </tr>
