@@ -91,7 +91,7 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateMaintenanceRequest(MaintenanceRequest request)
         {
-            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");
 
@@ -140,7 +140,7 @@ namespace PLMP_MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Apply(int id)
         {
-            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");
@@ -161,7 +161,7 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApplyConfirmed(int id)
         {
-            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");
@@ -234,9 +234,89 @@ namespace PLMP_MVC.Controllers
 
             unit.AvailabilityStatus = "Pending";
 
+            var payment = new Payment
+            {
+                LeaseId = lease.LeaseId,
+                InstallmentAmount = unit.RentAmount,
+                DateOfIssue = DateTime.Now,
+                Balance = unit.RentAmount,
+                PaymentStatus = "Overdue"
+            };
+
             //_context.Applications.Add(application);
             _context.Leases.Add(lease);
             _context.Units.Update(unit);
+            _context.Payments.Add(payment);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Application submitted successfully.";
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RenewLease(int id)
+        {
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(tenantIdClaim))
+                return RedirectToAction("Login", "Auth");
+
+            int tenantId = int.Parse(tenantIdClaim);
+
+            var lease = await _context.Leases
+                .FirstOrDefaultAsync(u => u.LeaseId == id);
+
+            if (lease == null)
+                return NotFound();
+
+            var unit = await _context.Units
+                .Where(u => u.UnitId == lease.UnitId)
+                .FirstOrDefaultAsync();
+
+            if (unit != null)
+            {
+                if (unit.AvailabilityStatus != "Vacant")
+                {
+                    TempData["Error"] = "This unit is no longer available.";
+                    return RedirectToAction("Dashboard");
+                }
+            }
+            else
+            {
+                TempData["Error"] = "This unit is no longer available.";
+                return RedirectToAction("Dashboard");
+            }
+
+            var existingApplication = await _context.Leases
+                .FirstOrDefaultAsync(a => a.UnitId == unit.UnitId && a.TenantId == tenantId &&
+                (a.ApplicationStatus == "Screening"));
+
+            if (existingApplication != null)
+            {
+                TempData["Error"] = "You already applied for this unit.";
+                return RedirectToAction("Dashboard");
+            }
+
+            lease.ApplicationStatus = "Screening";
+            lease.LeaseStatus = "Pending";
+            lease.StartDate = DateTime.Now;
+            lease.EndDate = DateTime.Now.AddYears(1);
+
+            unit.AvailabilityStatus = "Pending";
+
+            var payment = await _context.Payments
+                .FirstOrDefaultAsync(p => p.LeaseId == lease.LeaseId);
+
+            payment.DateOfIssue = DateTime.Now;
+            payment.InstallmentAmount = unit.RentAmount;
+            payment.Balance = unit.RentAmount / 2;
+            payment.PaymentStatus = "Overdue";
+
+            _context.Leases.Update(lease);
+            _context.Units.Update(unit);
+            _context.Payments.Update(payment);
 
             await _context.SaveChangesAsync();
 
@@ -248,7 +328,7 @@ namespace PLMP_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pay(int id)
         {
-            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");

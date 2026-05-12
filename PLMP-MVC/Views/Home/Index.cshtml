@@ -193,6 +193,13 @@
                                     <button type="submit" class="btn-action btn-reject">Reject</button>
                                 </form>
                             }
+                            else if (lease.LeaseStatus == "Active" && lease.ApplicationStatus == "Approved")
+                            {
+                                <form asp-action="RejectLease" asp-controller="Home" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@lease.LeaseId" />
+                                    <button type="submit" class="btn-action btn-reject">Terminate</button>
+                                </form>
+                            }
                             else
                             {
                                 <span>-</span>

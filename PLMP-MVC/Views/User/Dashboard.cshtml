@@ -33,11 +33,11 @@
         display: inline-block;
     }
 
-    .btn-main:hover {
-        background: #1e40af;
-        color: white;
-        text-decoration: none;
-    }
+        .btn-main:hover {
+            background: #1e40af;
+            color: white;
+            text-decoration: none;
+        }
 
     .btn-pay {
         background: #f59e0b;
@@ -47,9 +47,9 @@
         border: none;
     }
 
-    .btn-pay:hover {
-        background: #e27d00;
-    }
+        .btn-pay:hover {
+            background: #e27d00;
+        }
 
     .section-header {
         margin-bottom: 20px;
@@ -168,6 +168,9 @@
                         <td>Unit ID</td>
                         <td>Lease Status</td>
                         <td>Application Status</td>
+                        <td>Start Date</td>
+                        <td>End Date</td>
+                        <td>Action</td>
                     </tr>
                 </tbody>
                 <tbody>
@@ -178,6 +181,21 @@
                             <td>@lease.UnitId</td>
                             <td>@lease.LeaseStatus</td>
                             <td>@lease.ApplicationStatus</td>
+                            <td>@lease.StartDate?.ToString("MM/dd/yyyy")</td>
+                            <td>@lease.EndDate?.ToString("MM/dd/yyyy")</td>
+                            <td>
+                                @if (lease.LeaseStatus == "Termination")
+                                {
+                                    <form asp-action="RenewLease" asp-controller="User" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@lease.LeaseId" />
+                                        <button type="submit" class="btn-action btn-pay">Renew</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

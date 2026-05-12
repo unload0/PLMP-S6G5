@@ -123,6 +123,10 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Payments" asp-action="Index">Payments</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Tenants" asp-action="Index">Tenants</a>
+                        </li>
                     }
 
                 </ul>
@@ -131,7 +135,7 @@
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <span class="nav-link">Hello, @User.Identity.Name</span>
+                            <span class="nav-link">@User.Identity.Name</span>
                         </li>
 
                         <li class="nav-item">

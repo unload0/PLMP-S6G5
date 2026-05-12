@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using PLMP_MVC.Services;
 using PLMP_S6G5.Models;
 
 namespace PLMP_MVC
@@ -14,6 +15,8 @@ namespace PLMP_MVC
 
             builder.Services.AddDbContext<PLMPS6G5>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddHostedService<LeaseExpireService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>

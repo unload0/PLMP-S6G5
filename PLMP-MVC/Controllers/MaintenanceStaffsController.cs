@@ -119,6 +119,7 @@ namespace PLMP_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("StaffId,Name,PhoneNumber,Email,SkillProfile,Available")] MaintenanceStaff maintenanceStaff)
         {
             if (ModelState.IsValid)
@@ -151,6 +152,7 @@ namespace PLMP_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("StaffId,Name,PhoneNumber,Email,SkillProfile,Available")] MaintenanceStaff maintenanceStaff)
         {
             if (id != maintenanceStaff.StaffId)
@@ -202,6 +204,7 @@ namespace PLMP_MVC.Controllers
         // POST: MaintenanceStaffs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var maintenanceStaff = await _context.MaintenanceStaffs.FindAsync(id);
