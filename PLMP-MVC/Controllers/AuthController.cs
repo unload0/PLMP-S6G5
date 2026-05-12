@@ -25,12 +25,17 @@ namespace PLMP_MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // Admin login مؤقت
-            if (username == "admin" && password == "123")
+            //users login
+
+            var manager = await _context.PropertyManagers
+             .FirstOrDefaultAsync(t => t.Email == username);
+
+            if (manager != null && password == "123")
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, "Admin"),
+                    new Claim(ClaimTypes.Name, manager.Name),
+                    new Claim(ClaimTypes.NameIdentifier, manager.ManagerId.ToString()),
                     new Claim(ClaimTypes.Role, "Admin")
                 };
 
@@ -47,7 +52,6 @@ namespace PLMP_MVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // User login من جدول Tenant
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.Email == username);
 
@@ -55,9 +59,10 @@ namespace PLMP_MVC.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, tenant.Email ?? "User"),
+                    new Claim(ClaimTypes.Name, tenant.Name ?? "User"),
+                    new Claim(ClaimTypes.NameIdentifier, tenant.TenantId.ToString()),
                     new Claim(ClaimTypes.Role, "User"),
-                    new Claim("TenantId", tenant.TenantId.ToString())
+                    //new Claim("TenantId", tenant.TenantId.ToString())
                 };
 
                 var identity = new ClaimsIdentity(
@@ -71,6 +76,32 @@ namespace PLMP_MVC.Controllers
                     principal);
 
                 return RedirectToAction("Dashboard", "User");
+            }
+
+            var staff = await _context.MaintenanceStaffs
+                .FirstOrDefaultAsync(t => t.Email == username);
+
+            if (staff != null && password == "123")
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, staff.Name ?? "Staff"),
+                    new Claim(ClaimTypes.NameIdentifier, staff.StaffId.ToString()),
+                    new Claim(ClaimTypes.Role, "Staff"),
+                    //new Claim("StaffId", staff.StaffId.ToString())
+                };
+
+                var identity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal);
+
+                return RedirectToAction("Index", "MaintenanceStaffs");
             }
 
             ViewBag.Error = "Invalid username or password.";
