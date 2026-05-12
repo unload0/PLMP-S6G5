@@ -44,6 +44,52 @@ namespace PLMP_MVC.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkInProgress(int requestId)
+        {
+            var request = await _context.MaintenanceRequests
+                .FirstOrDefaultAsync(r => r.RequestId == requestId);
+
+            if (request != null)
+            {
+                request.Status = "In Progress";
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                TempData["Error"] = "Request ID doesn't exist";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Success"] = "Request Marked As In Progress Successfully";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkResolved(int requestId)
+        {
+            var request = await _context.MaintenanceRequests
+                .FirstOrDefaultAsync(r => r.RequestId == requestId);
+
+            if (request != null)
+            {
+                request.Status = "Resolved";
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                TempData["Error"] = "Request ID doesn't exist";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Success"] = "Request Marked As Resolved Successfully";
+            return RedirectToAction("Index");
+        }
+
         // GET: MaintenanceStaffs/Details/5
         public async Task<IActionResult> Details(int? id)
         {

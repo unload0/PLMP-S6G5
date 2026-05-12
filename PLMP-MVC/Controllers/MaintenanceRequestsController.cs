@@ -99,7 +99,6 @@ namespace PLMP_MVC.Controllers
             TempData["Success"] = "Your maintenance request has been submitted successfully.";
             return RedirectToAction("Create");
         }
-        
 
         private void LoadDropdowns()
         {

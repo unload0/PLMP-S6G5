@@ -20,7 +20,8 @@ namespace PLMP_MVC.Controllers
 
         public async Task<IActionResult> Dashboard()
         {
-            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            //var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(tenantIdClaim))
                 return RedirectToAction("Login", "Auth");

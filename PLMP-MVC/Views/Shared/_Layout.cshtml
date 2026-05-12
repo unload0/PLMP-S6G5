@@ -50,7 +50,8 @@
     <nav class="navbar navbar-expand-lg main-navbar">
         <div class="container-fluid px-4">
 
-            <a class="navbar-brand" asp-controller="Auth" asp-action="Login">PLMP</a>
+            @* <a class="navbar-brand" asp-controller="Auth" asp-action="Login">PLMP</a> *@
+            <span class="navbar-brand">PLMP</span>
 
             <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
@@ -86,6 +87,13 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="User" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                    }
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Staff"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="MaintenanceStaffs" asp-action="Index">Dashboard</a>
                         </li>
                     }
 

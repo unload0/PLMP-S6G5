@@ -159,6 +159,7 @@
                     <th>Description</th>
                     <th>Status</th>
                     <th>Staff ID</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -172,6 +173,26 @@
                         <td>@request.Description</td>
                         <td>@request.Status</td>
                         <td>@request.StaffId</td>
+                        <td>
+                            @if (request.Status == "Assigned")
+                            {
+                                <form asp-action="MarkInProgress" asp-controller="MaintenanceStaffs" method="post" style="display:inline;">
+                                    <input type="hidden" name="requestId" value=@request.RequestId />
+                                    <button type="submit" class="btn-action btn-approve">Mark As In Progress</button>
+                                </form>
+                            }
+                            else if (request.Status == "In Progress")
+                            {
+                                <form asp-action="MarkResolved" asp-controller="MaintenanceStaffs" method="post" style="display:inline;">
+                                    <input type="hidden" name="requestId" value="@request.RequestId" />
+                                    <button type="submit" class="btn-action btn-reject">Mark As Resolved</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
