@@ -113,9 +113,12 @@
 <div class="container container-box">
     <h1>💳 Payments</h1>
 
-    <div class="top-bar">
-        <a asp-action="Create" class="btn-custom">+ Add Payment</a>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="top-bar">
+            <a asp-action="Create" class="btn-custom">+ Add Payment</a>
+        </div>
+    }
 
     <table>
         <thead>
@@ -126,7 +129,10 @@
                 <th>Date Of Issue</th>
                 <th>Balance</th>
                 <th>Payment Status</th>
-                <th>Actions</th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -139,11 +145,14 @@
                     <td>@item.DateOfIssue</td>
                     <td>@item.Balance</td>
                     <td>@item.PaymentStatus</td>
-                    <td class="action-links">
-                        <a asp-action="Details" asp-route-id="@item.PaymentId" class="btn-action btn-details">Details</a>
-                        <a asp-action="Edit" asp-route-id="@item.PaymentId" class="btn-action btn-edit">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.PaymentId" class="btn-action btn-delete">Delete</a>
-                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td class="action-links">
+                            <a asp-action="Details" asp-route-id="@item.PaymentId" class="btn-action btn-details">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.PaymentId" class="btn-action btn-edit">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.PaymentId" class="btn-action btn-delete">Delete</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

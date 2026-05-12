@@ -5,7 +5,7 @@ using PLMP_S6G5.Models;
 
 namespace PLMP_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class PaymentsController : Controller
     {
         private readonly PLMPS6G5 _context;
@@ -43,6 +43,7 @@ namespace PLMP_MVC.Controllers
         // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Payment payment)
         {
             if (ModelState.IsValid)
@@ -68,6 +69,7 @@ namespace PLMP_MVC.Controllers
         // POST: Payments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Payment payment)
         {
             if (id != payment.PaymentId) return NotFound();
@@ -109,6 +111,7 @@ namespace PLMP_MVC.Controllers
         // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var payment = await _context.Payments.FindAsync(id);

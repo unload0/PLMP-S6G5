@@ -5,7 +5,7 @@ using PLMP_S6G5.Models;
 
 namespace PLMP_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class BuildingsController : Controller
     {
         private readonly PLMPS6G5 _context;
@@ -39,6 +39,7 @@ namespace PLMP_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Building building)
         {
             if (ModelState.IsValid)
@@ -62,6 +63,7 @@ namespace PLMP_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Building building)
         {
             if (id != building.BuildingId) return NotFound();
@@ -99,6 +101,7 @@ namespace PLMP_MVC.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var building = await _context.Buildings.FindAsync(id);
