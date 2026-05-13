@@ -13,7 +13,10 @@ namespace PLMP_MVC
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<PLMPS6G5>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                ));
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -34,6 +37,7 @@ namespace PLMP_MVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -41,7 +45,7 @@ namespace PLMP_MVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Auth}/{action=Login}/{id?}");
+                pattern: "{controller=PublicLookup}/{action=Index}/{id?}");
 
             app.Run();
         }

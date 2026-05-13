@@ -1,0 +1,238 @@
+﻿@model PLMP_S6G5.Models.MaintenanceRequest
+
+@{
+    ViewData["Title"] = "Public Maintenance Lookup";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .lookup-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .lookup-card {
+        background: white;
+        border-radius: 22px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+
+    .btn-login {
+        background: #4f46e5;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+        .btn-login:hover {
+            background: #4338ca;
+            color: white;
+        }
+
+    .lookup-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: #312e81;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .lookup-subtitle {
+        color: #6b7280;
+        text-align: center;
+        margin-bottom: 30px;
+        line-height: 1.7;
+    }
+
+    .search-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 14px;
+    }
+
+    .search-input {
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        font-size: 15px;
+    }
+
+    .btn-search {
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 24px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .btn-search:hover {
+            background: #5563c1;
+        }
+
+    .error-text {
+        color: #dc2626;
+        font-weight: 700;
+        margin-top: 18px;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #312e81;
+        margin-bottom: 20px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .info-box {
+        background: #eef2ff;
+        border-radius: 16px;
+        padding: 18px;
+    }
+
+        .info-box strong {
+            display: block;
+            color: #312e81;
+            margin-bottom: 6px;
+        }
+
+    .status-badge {
+        display: inline-block;
+        background: #4f46e5;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="lookup-container">
+
+   
+
+    <div class="lookup-card">
+
+        <h1 class="lookup-title">
+            🛠 Public Maintenance Lookup
+        </h1>
+
+        <p class="lookup-subtitle">
+            Enter your maintenance ticket number and registered phone number
+            to view the current status and details of your request.
+        </p>
+
+        <form method="post">
+
+            <div class="search-grid">
+
+                <input type="number"
+                       name="requestId"
+                       class="search-input"
+                       placeholder="Maintenance Ticket Number"
+                       required />
+
+                <input type="text"
+                       name="phoneNumber"
+                       class="search-input"
+                       placeholder="Registered Phone Number"
+                       required />
+
+                <button type="submit" class="btn-search">
+                    Search
+                </button>
+
+            </div>
+
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="error-text">@ViewBag.Error</p>
+        }
+
+    </div>
+
+    @if (Model != null)
+    {
+        <div class="lookup-card">
+
+            <h3 class="section-title">
+                Maintenance Request Details
+            </h3>
+
+            <div class="info-grid">
+
+                <div class="info-box">
+                    <strong>Request ID</strong>
+                    <p>@Model.RequestId</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Tenant Name</strong>
+                    <p>@Model.Tenant?.Name</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Phone Number</strong>
+                    <p>@Model.Tenant?.PhoneNumber</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Category</strong>
+                    <p>@Model.CategoryType</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Priority</strong>
+                    <p>@Model.Priority</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Assigned Staff</strong>
+                    <p>
+                        @(Model.Staff != null ? Model.Staff.Name : "Not Assigned")
+                    </p>
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="info-box">
+                <strong>Description</strong>
+                <p>@Model.Description</p>
+            </div>
+
+            <br />
+
+            <div>
+                <strong>Status</strong>
+                <br />
+
+                <span class="status-badge">
+                    @Model.Status
+                </span>
+            </div>
+
+        </div>
+    }
+
+</div>
