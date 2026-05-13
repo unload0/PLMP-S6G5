@@ -1,0 +1,168 @@
+﻿@model PLMP_Reports.Controllers.ReportSummary
+
+@{
+    ViewData["Title"] = "Reports Dashboard";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f3f4f6;
+    }
+
+    .topbar {
+        background: linear-gradient(to right, #4f46e5, #7c3aed);
+        color: white;
+        padding: 22px 40px;
+        font-size: 28px;
+        font-weight: 800;
+    }
+
+    .dashboard-container {
+        padding: 40px;
+    }
+
+    .dashboard-title {
+        font-size: 34px;
+        font-weight: 900;
+        color: #312e81;
+        margin-bottom: 35px;
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+    }
+
+    .report-card {
+        background: white;
+        border-radius: 22px;
+        padding: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        transition: 0.3s ease;
+    }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-title {
+        color: #6b7280;
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+
+    .card-value {
+        font-size: 42px;
+        font-weight: 900;
+        color: #4f46e5;
+    }
+
+    .section-title {
+        margin-top: 50px;
+        margin-bottom: 25px;
+        font-size: 28px;
+        font-weight: 800;
+        color: #312e81;
+    }
+
+    .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .mini-card {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+    }
+
+        .mini-card h4 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+
+        .mini-card p {
+            font-size: 26px;
+            font-weight: 800;
+            color: #111827;
+        }
+</style>
+
+<div class="topbar">
+    📊 PLMP Reporting Dashboard
+</div>
+
+<div class="dashboard-container">
+
+    <div class="dashboard-title">
+        Operational Reports Overview
+    </div>
+
+    <div class="card-grid">
+
+        <div class="report-card">
+            <div class="card-title">Total Buildings</div>
+            <div class="card-value">@Model.TotalBuildings</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Units</div>
+            <div class="card-value">@Model.TotalUnits</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Tenants</div>
+            <div class="card-value">@Model.TotalTenants</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Leases</div>
+            <div class="card-value">@Model.TotalLeases</div>
+        </div>
+
+    </div>
+
+    <div class="section-title">
+        Property Performance
+    </div>
+
+    <div class="mini-grid">
+
+        <div class="mini-card">
+            <h4>Vacant Units</h4>
+            <p>@Model.VacantUnits</p>
+        </div>
+
+        <div class="mini-card">
+            <h4>Leased Units</h4>
+            <p>@Model.LeasedUnits</p>
+        </div>
+
+        <div class="mini-card">
+            <h4>Active Leases</h4>
+            <p>@Model.ActiveLeases</p>
+        </div>
+
+        <div class="mini-card">
+            <h4>Terminated Leases</h4>
+            <p>@Model.TerminatedLeases</p>
+        </div>
+
+        <div class="mini-card">
+            <h4>Overdue Payments</h4>
+            <p>@Model.OverduePayments</p>
+        </div>
+
+        <div class="mini-card">
+            <h4>Open Maintenance Requests</h4>
+            <p>@Model.OpenMaintenanceRequests</p>
+        </div>
+
+    </div>
+
+</div>
