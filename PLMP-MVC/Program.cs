@@ -13,12 +13,17 @@ namespace PLMP_MVC
 
             builder.Services.AddControllersWithViews();
 
+           
+            builder.Services.AddHttpClient();
+
             builder.Services.AddDbContext<PLMPS6G5>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddHostedService<LeaseExpireService>();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            builder.Services.AddAuthentication(
+                CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Auth/Login";
@@ -36,15 +41,18 @@ namespace PLMP_MVC
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Auth}/{action=Login}/{id?}");
+                pattern: "{controller=PublicLookup}/{action=Index}/{id?}");
 
             app.Run();
         }
