@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["Title"] = "Reports Login";
+}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #667eea, #764ba2);
+        height: 100vh;
+    }
+
+    .main-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 950px;
+        background: white;
+        border-radius: 28px;
+        overflow: hidden;
+        display: flex;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .left-side {
+        flex: 1;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .logo {
+        font-size: 48px;
+        font-weight: 900;
+        margin-bottom: 20px;
+    }
+
+    .subtitle {
+        font-size: 22px;
+        margin-bottom: 25px;
+        opacity: 0.95;
+    }
+
+    .desc {
+        line-height: 1.9;
+        opacity: 0.9;
+        font-size: 15px;
+    }
+
+    .right-side {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .title {
+        font-size: 32px;
+        font-weight: 800;
+        color: #312e81;
+        margin-bottom: 10px;
+    }
+
+    .small-text {
+        color: #6b7280;
+        margin-bottom: 30px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        margin-bottom: 18px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(to right, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-login:hover {
+            opacity: 0.9;
+        }
+
+    .error-msg {
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="main-wrapper">
+
+    <div class="login-card">
+
+        <!-- LEFT -->
+        <div class="left-side">
+
+            <div class="logo">
+                📊 PLMP Reports
+            </div>
+
+            <div class="subtitle">
+                Reporting & Analytics Dashboard
+            </div>
+
+            <div class="desc">
+                Access operational reports and analytics for property management,
+                occupancy rates, maintenance backlog, lease monitoring,
+                and overdue payment tracking.
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-side">
+
+            <div class="form-container">
+
+                <div class="title">
+                    Manager Login
+                </div>
+
+                <div class="small-text">
+                    Sign in to access reporting tools.
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="error-msg">
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <form method="post">
+
+                    <input type="text"
+                           name="username"
+                           class="form-control"
+                           placeholder="Manager Email"
+                           required />
+
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Password"
+                           required />
+
+                    <button type="submit" class="btn-login">
+                        Login to Reports
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
