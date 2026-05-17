@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using PLMP_MVC.Hubs;
 using PLMP_MVC.Services;
 using PLMP_S6G5.Models;
 
@@ -21,6 +22,8 @@ namespace PLMP_MVC
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddHostedService<LeaseExpireService>();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -53,6 +56,8 @@ namespace PLMP_MVC
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=PublicLookup}/{action=Index}/{id?}");
+
+            app.MapHub<MaintenanceHub>("/maintenanceHub");
 
             app.Run();
         }

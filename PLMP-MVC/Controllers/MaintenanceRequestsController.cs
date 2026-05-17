@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using PLMP_MVC.Hubs;
 using PLMP_S6G5.Models;
 using System.Security.Claims;
 
@@ -11,10 +13,12 @@ namespace PLMP_MVC.Controllers
     public class MaintenanceRequestsController : Controller
     {
         private readonly PLMPS6G5 _context;
+        private readonly IHubContext<MaintenanceHub> _hubContext;
 
-        public MaintenanceRequestsController(PLMPS6G5 context)
+        public MaintenanceRequestsController(PLMPS6G5 context, IHubContext<MaintenanceHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // Admin only: view all maintenance requests
@@ -95,6 +99,15 @@ namespace PLMP_MVC.Controllers
 
             _context.MaintenanceRequests.Add(request);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.Groups("Admins", "Staff").SendAsync("ReceiveNewMaintenanceRequest", new
+            {
+                requestId = request.RequestId,
+                categoryType = request.CategoryType,
+                priority = request.Priority,
+                description = request.Description,
+                status = request.Status
+            });
 
             TempData["Success"] = "Your maintenance request has been submitted successfully.";
             return RedirectToAction("Create");

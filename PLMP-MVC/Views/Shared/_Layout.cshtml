@@ -1,4 +1,56 @@
 ﻿<!DOCTYPE html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+<script type="text/javascript">
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/maintenanceHub")
+        .withAutomaticReconnect()
+        .build();
+
+    hubConnection.on("ReceiveNewMaintenanceRequest", function (request) {
+        console.log("Live Alert - New Request Received:", request);
+
+        alert(`NEW MAINTENANCE REQUEST!\n` +
+              `ID: #${request.requestId}\n` +
+              `Category: ${request.categoryType}\n` +
+              `Priority: ${request.priority}\n` +
+              `Description: ${request.description}`);
+
+        const countBadge = document.getElementById("RequestsCountBadge");
+        if (countBadge) {
+            let currentVal = parseInt(countBadge.innerText) || 0;
+            countBadge.innerText = currentVal + 1;
+        }
+
+        const requestTableBody = document.getElementById("maintenanceRequestsTableBody");
+        if (requestTableBody) {
+            let badgeColor = "bg-secondary";
+            if (request.priority === "High") badgeColor = "bg-danger";
+            else if (request.priority === "Medium") badgeColor = "bg-warning";
+
+            const newRowHtml = `
+                <tr class="table-primary animate__animated animate__fadeInDown">
+                    <td>${request.requestId}</td>
+                    <td>${request.categoryType}</td>
+                    <td><span class="badge ${badgeColor}">${request.priority}</span></td>
+                    <td>${request.description}</td>
+                    <td><span class="badge bg-info">${request.status}</span></td>
+                </tr>`;
+
+            requestTableBody.insertAdjacentHTML('afterbegin', newRowHtml);
+        }
+    });
+
+    hubConnection.start()
+        .then(function () {
+            console.log("Successfully connected to MaintenanceHub via SignalR.");
+        })
+        .catch(function (err) {
+            return console.error("SignalR Connection Error: ", err.toString());
+        });
+</script>
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />

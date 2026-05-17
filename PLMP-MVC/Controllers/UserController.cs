@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using PLMP_MVC.Hubs;
 using PLMP_S6G5.Models;
 using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
@@ -12,10 +14,12 @@ namespace PLMP_MVC.Controllers
     public class UserController : Controller
     {
         private readonly PLMPS6G5 _context;
+        private readonly IHubContext<MaintenanceHub> _hubContext;
 
-        public UserController(PLMPS6G5 context)
+        public UserController(PLMPS6G5 context, IHubContext<MaintenanceHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -132,6 +136,15 @@ namespace PLMP_MVC.Controllers
 
             _context.MaintenanceRequests.Add(request);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.Groups("Admins", "Staff").SendAsync("ReceiveNewMaintenanceRequest", new
+            {
+                requestId = request.RequestId,
+                categoryType = request.CategoryType,
+                priority = request.Priority,
+                description = request.Description,
+                status = request.Status
+            });
 
             TempData["Success"] = "Maintenance request submitted successfully.";
             return RedirectToAction("Dashboard");
