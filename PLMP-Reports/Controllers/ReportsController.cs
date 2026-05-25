@@ -22,13 +22,12 @@ namespace PLMP_Reports.Controllers
                 return RedirectToAction("Login", "ReportAuth");
             }
 
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Reporting");
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await client.GetAsync(
-          "https://localhost:7111/api/ApiReports/summary");
+            var response = await client.GetAsync($"/api/ApiReports/summary");
 
             if (!response.IsSuccessStatusCode)
             {

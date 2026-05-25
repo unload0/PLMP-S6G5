@@ -23,7 +23,7 @@ namespace PLMP_Reports.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Reporting");
 
             var loginData = new
             {
@@ -36,9 +36,7 @@ namespace PLMP_Reports.Controllers
                 Encoding.UTF8,
                 "application/json");
 
-            var response = await client.PostAsync(
-    "https://localhost:7111/api/ApiAuth/login",
-    content);
+            var response = await client.PostAsync($"/api/ApiAuth/login",content);
 
             if (!response.IsSuccessStatusCode)
             {

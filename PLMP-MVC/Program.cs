@@ -14,8 +14,13 @@ namespace PLMP_MVC
 
             builder.Services.AddControllersWithViews();
 
-           
-            builder.Services.AddHttpClient();
+
+            //builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient("Lookup", client =>
+            {
+                client.BaseAddress = new Uri("https://api-plmp-s6g5-01-d0hdbzbng3b0a2h0.westeurope-01.azurewebsites.net");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
 
             builder.Services.AddDbContext<PLMPS6G5>(options =>
                 options.UseSqlServer(
