@@ -422,3 +422,4 @@ PLMP-S6G5/obj/*
 PLMP-MVC/obj/*
 PLMP-MVC/obj/Debug/net9.0/PLMP-MVC.assets.cache
 .github/copilot-instructions.md
+PLMP-MVC/PLMP-MVC.csproj.user

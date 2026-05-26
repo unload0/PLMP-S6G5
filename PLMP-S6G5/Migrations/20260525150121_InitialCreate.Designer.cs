@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PLMP_S6G5.Models;
 
@@ -11,9 +12,11 @@ using PLMP_S6G5.Models;
 namespace PLMP_S6G5.Migrations
 {
     [DbContext(typeof(PLMPS6G5))]
-    partial class PLMPS6G5ModelSnapshot : ModelSnapshot
+    [Migration("20260525150121_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasKey("BuildingId");
 
-                    b.ToTable("Building", (string)null);
+                    b.ToTable("Building");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.Lease", b =>
@@ -90,7 +93,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("Lease", (string)null);
+                    b.ToTable("Lease");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.MaintenanceRequest", b =>
@@ -132,7 +135,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("MaintenanceRequest", (string)null);
+                    b.ToTable("MaintenanceRequest");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.MaintenanceStaff", b =>
@@ -167,7 +170,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasKey("StaffId");
 
-                    b.ToTable("MaintenanceStaff", (string)null);
+                    b.ToTable("MaintenanceStaff");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.Payment", b =>
@@ -201,7 +204,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasIndex("LeaseId");
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.PropertyManager", b =>
@@ -229,7 +232,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasKey("ManagerId");
 
-                    b.ToTable("PropertyManager", (string)null);
+                    b.ToTable("PropertyManager");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.Tenant", b =>
@@ -257,7 +260,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasKey("TenantId");
 
-                    b.ToTable("Tenant", (string)null);
+                    b.ToTable("Tenant");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.Unit", b =>
@@ -292,7 +295,7 @@ namespace PLMP_S6G5.Migrations
 
                     b.HasIndex("BuildingId");
 
-                    b.ToTable("Unit", (string)null);
+                    b.ToTable("Unit");
                 });
 
             modelBuilder.Entity("PLMP_S6G5.Models.Lease", b =>

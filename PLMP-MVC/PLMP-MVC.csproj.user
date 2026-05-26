@@ -14,5 +14,6 @@
     <WebStackScaffolding_DbContextTypeFullName>PLMP_S6G5.Models.PLMPS6G5</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_IsViewGenerationSelected>True</WebStackScaffolding_IsViewGenerationSelected>
+    <NameOfLastUsedPublishProfile>C:\Users\SaloomLaptop\Documents\GitHub\PLMP-S6G5\PLMP-MVC\Properties\PublishProfiles\mvc-plmp-s6g5-01 - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

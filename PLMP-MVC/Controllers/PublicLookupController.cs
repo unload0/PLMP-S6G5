@@ -21,10 +21,9 @@ namespace PLMP_MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(int requestId, string phoneNumber)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Lookup");
 
-            var apiUrl =
-                $"https://localhost:7111/api/PublicMaintenanceLookup?requestId={requestId}&phoneNumber={phoneNumber}";
+            var apiUrl = $"/api/PublicMaintenanceLookup?requestId={requestId}&phoneNumber={phoneNumber}";
 
             var response = await client.GetAsync(apiUrl);
 
