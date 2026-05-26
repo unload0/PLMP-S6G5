@@ -11,11 +11,11 @@
     hubConnection.on("ReceiveNewMaintenanceRequest", function (request) {
         console.log("Live Alert - New Request Received:", request);
 
-        alert(`NEW MAINTENANCE REQUEST!\n` +
-              `ID: #${request.requestId}\n` +
-              `Category: ${request.categoryType}\n` +
-              `Priority: ${request.priority}\n` +
-              `Description: ${request.description}`);
+        // alert(`NEW MAINTENANCE REQUEST!\n` +
+        //       `ID: #${request.requestId}\n` +
+        //       `Category: ${request.categoryType}\n` +
+        //       `Priority: ${request.priority}\n` +
+        //       `Description: ${request.description}`);
 
         const countBadge = document.getElementById("RequestsCountBadge");
         if (countBadge) {
