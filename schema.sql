@@ -27,7 +27,7 @@ CREATE TABLE MaintenanceRequest
   RequestID    INT IDENTITY(1,1)           NOT NULL,
   TenantID     INT          NOT NULL,
   StaffID      INT          ,
-  CategoryType NVARCHAR(300) CHECK (CategoryType IN ('Hazard', 'Electricity', 'HVAC', 'Wi-Fi', 'Plumbing')),
+  CategoryType NVARCHAR(300) CHECK (CategoryType IN ('Hazard', 'Electricity', 'HVAC', 'Wi-Fi', 'Plumbing', 'General')),
   Priority     NVARCHAR(300) NOT NULL CHECK (Priority IN ('Low', 'Medium', 'High')),
   Description  NVARCHAR(MAX),
   Status       NVARCHAR(300) CHECK (Status IN ('Submitted', 'Assigned', 'In Progress', 'Resolved', 'Closed')),

@@ -76,9 +76,10 @@ namespace PLMP_MVC.Controllers
             {
                 new SelectListItem { Value = "Plumbing", Text = "Plumbing" },
                 new SelectListItem { Value = "Electricity", Text = "Electricity" },
-                new SelectListItem { Value = "AC", Text = "AC" },
-                new SelectListItem { Value = "Cleaning", Text = "Cleaning" },
-                new SelectListItem { Value = "General Maintenance", Text = "General Maintenance" }
+                new SelectListItem { Value = "HVAC", Text = "HVAC" },
+                new SelectListItem { Value = "Wi-Fi", Text = "Wi-Fi" },
+                new SelectListItem { Value = "Hazard", Text = "Hazard" },
+                new SelectListItem { Value = "General", Text = "General" }
             };
 
             ViewBag.PriorityOptions = new List<SelectListItem>
@@ -114,11 +115,12 @@ namespace PLMP_MVC.Controllers
             {
                 ViewBag.CategoryOptions = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "Plumbing", Text = "Plumbing" },
-                    new SelectListItem { Value = "Electricity", Text = "Electricity" },
-                    new SelectListItem { Value = "AC", Text = "AC" },
-                    new SelectListItem { Value = "Cleaning", Text = "Cleaning" },
-                    new SelectListItem { Value = "General Maintenance", Text = "General Maintenance" }
+                new SelectListItem { Value = "Plumbing", Text = "Plumbing" },
+                new SelectListItem { Value = "Wi-Fi", Text = "Wi-Fi" },
+                new SelectListItem { Value = "HVAC", Text = "HVAC" },
+                new SelectListItem { Value = "Electricity", Text = "Electricity" },
+                new SelectListItem { Value = "Hazard", Text = "Hazard" },
+                new SelectListItem { Value = "General", Text = "General" }
                 };
 
                 ViewBag.PriorityOptions = new List<SelectListItem>
